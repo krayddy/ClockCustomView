@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NonClockDefaultActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <com.example.clockcustomview.ClockCustomView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:ClockFrameColor="@color/purple_200"
+        app:ClockInnerColor="#f03495"
+        app:DividerDefaultColor="#f0b1b2"
+        app:DividerWithNumberColor="#ff937a"
+        app:HourHandColor="#ffb961"
+        app:MinuteHandColor="#b5a642"
+        app:SecondHandColor="#755c48"
+        app:NumberColor="#734222"
+        app:HourHandWidth="14dp"
+        app:MinuteHandWidth="7dp"
+        app:SecondHandWidth="3dp"
+        app:HourHandLength="50dp"
+        app:MinuteHandLength="75dp"
+        app:SecondHandLength="100dp"
+        app:DividerToNumberDistance="40dp"
+        app:FrameToDividerDistance="20dp"
+        app:ClockFrameRadius="25dp"
+        app:DividerDefaultRadius="4dp"
+        app:DividerWithNumberRadius="6dp"
+        app:NumberSize="30dp"
+        app:ClockTotalRadius="150dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:textColor="@color/black"
+        android:text="Необычные часы" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/NonDefaultClockBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Назад"
+            android:layout_marginRight="20dp"/>
+
+        <Button
+            android:id="@+id/NonDefaultClockNextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Далее"/>
+    </LinearLayout>
+
+</LinearLayout>

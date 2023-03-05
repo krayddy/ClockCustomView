@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ClockCustomView">
+        <attr name="ClockTotalRadius" format="dimension"/>
+        <attr name="ClockInnerColor" format="color"/>
+
+        <attr name="ClockFrameRadius" format="dimension"/>
+        <attr name="ClockFrameColor" format="color"/>
+
+        <attr name="NumberSize" format="dimension"/>
+        <attr name="NumberColor" format="color"/>
+
+        <attr name="FrameToDividerDistance" format="dimension"/>
+        <attr name="DividerToNumberDistance" format="dimension"/>
+
+        <attr name="DividerDefaultRadius" format="dimension"/>
+        <attr name="DividerDefaultColor" format="color"/>
+
+        <attr name="DividerWithNumberRadius" format="dimension"/>
+        <attr name="DividerWithNumberColor" format="color"/>
+
+        <attr name="HourHandLength" format="dimension"/>
+        <attr name="HourHandWidth" format="dimension"/>
+        <attr name="HourHandColor" format="color"/>
+
+        <attr name="MinuteHandLength" format="dimension"/>
+        <attr name="MinuteHandWidth" format="dimension"/>
+        <attr name="MinuteHandColor" format="color"/>
+
+        <attr name="SecondHandLength" format="dimension"/>
+        <attr name="SecondHandWidth" format="dimension"/>
+        <attr name="SecondHandColor" format="color"/>
+
+        <attr name="TimeZone" format="string"/>
+    </declare-styleable>
+</resources>
