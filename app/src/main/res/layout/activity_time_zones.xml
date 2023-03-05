@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:ClockTotalRadius="60dp"
-                app:TimeZone="PST"/>
+                app:TimeZone="America/Los_Angeles"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:ClockTotalRadius="60dp"
-                app:TimeZone="EST"/>
+                app:TimeZone="America/New_York"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:ClockTotalRadius="60dp"
-                app:TimeZone="GMT"/>
+                app:TimeZone="Europe/London"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

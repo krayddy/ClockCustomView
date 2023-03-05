@@ -2,6 +2,7 @@ package com.example.clockcustomview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -42,9 +43,14 @@ public class ClockCustomView extends View {
     //endregion
     Rect tempNumberBounds; //переменная для выставления границ чисел при отрисовке
     int savedState;
+    Calendar calendar;
+    Canvas canvasWithClockFace;
+    Bitmap bitmapWithClockFace;
 
     public ClockCustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+
 
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -54,6 +60,8 @@ public class ClockCustomView extends View {
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
+
+
 
         try {
             initCustomAttributes(context, attrs);
@@ -69,58 +77,34 @@ public class ClockCustomView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+        int tempFinalSize = 0;
 
         //Диаметр часов будет равен минимальному из ширины/высоты View или подстроится под заданный программно радиус
         if (customClockTotalRadius == 0) {
             ClockTotalRadius = Math.min(widthSpecSize, heightSpecSize) / 2f;
+            tempFinalSize = (int)ClockTotalRadius * 2;
             setMeasuredDimension(widthSpecSize, heightSpecSize);
         } else {
-            setMeasuredDimension((int)customClockTotalRadius * 2, (int)customClockTotalRadius * 2);
+            tempFinalSize = (int)customClockTotalRadius * 2;
+            setMeasuredDimension(tempFinalSize, tempFinalSize);
         }
+
+        bitmapWithClockFace = Bitmap.createBitmap(tempFinalSize, tempFinalSize, Bitmap.Config.ARGB_8888);
+        canvasWithClockFace = new Canvas(bitmapWithClockFace);
+        drawCanvasWithClockFace();
+
         initClockSize();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        canvas.drawBitmap(bitmapWithClockFace, 0, 0, FramePaint);
 
-        canvas.translate(ClockTotalRadius, ClockTotalRadius);
-        canvas.drawCircle(0, 0, ClockTotalRadius, FramePaint);
-        canvas.drawCircle(0, 0, ClockTotalRadius - ClockFrameRadius, InnerClockPaint);
-
-        float distanceToDivider = ClockTotalRadius - (ClockFrameRadius + FrameToDividerDistance);
-        float distanceToNumber = ClockTotalRadius - (ClockFrameRadius + FrameToDividerDistance + DividerToNumberDistance);
-
-        String text; //переменная для чисел
-        for (int i = 0; i < 60; i++) {
-            if (i % 5 == 0) {
-                canvas.drawCircle(
-                        distanceToDivider * (float) Math.cos(i * Math.PI / 30),
-                        distanceToDivider * (float) Math.sin(i * Math.PI / 30),
-                        DividerWithNumberRadius, DividerWithNumberPaint);
-                if (i == 45)
-                    text = "12";
-                else text = Integer.toString(((i / 5) + 3) % 12); //+3 т.к. положительные xy начинаются с 90 градусов
-
-                NumberPaint.getTextBounds(text, 0, text.length(), tempNumberBounds);
-                canvas.drawText(
-                        text,
-                        (distanceToNumber) * (float) Math.cos(i * Math.PI / 30),
-                        (distanceToNumber) * (float) Math.sin(i * Math.PI / 30)
-                                + tempNumberBounds.height() / 2f, //выравниваем числа относительно центра
-                        NumberPaint);
-            }
-            else
-                canvas.drawCircle(
-                        distanceToDivider * (float)Math.cos(i * Math.PI / 30),
-                        distanceToDivider * (float)Math.sin(i * Math.PI / 30),
-                        DividerDefaultRadius, DividerDefaultPaint);
-        }
-
-        Calendar calendar = Calendar.getInstance();
+        calendar = Calendar.getInstance();
         if (customClockTimeZone != null && !customClockTimeZone.equals(""))
             calendar.setTimeZone(TimeZone.getTimeZone(ClockTimeZone));
         else calendar.setTimeZone(TimeZone.getDefault());
+
 
         int currentHours = calendar.get(Calendar.HOUR);
         int currentMinute = calendar.get(Calendar.MINUTE);
@@ -136,8 +120,9 @@ public class ClockCustomView extends View {
         float currentMinuteHandEndX = MinuteHandLength * (float)Math.cos(currentMinuteHandAngle);
         float currentMinuteHandEndY = MinuteHandLength * (float)Math.sin(currentMinuteHandAngle);
         float currentHourHandEndX = HourHandLength * (float)Math.cos(currentHourHandAngle);
-        float currentHourHandEndY = HourHandLength * (float)Math.sin(currentHourHandAngle);;
+        float currentHourHandEndY = HourHandLength * (float)Math.sin(currentHourHandAngle);
 
+        canvas.translate(ClockTotalRadius, ClockTotalRadius);
         canvas.rotate(-90);
         canvas.drawLine(0, 0,
                 currentHourHandEndX,
@@ -151,6 +136,8 @@ public class ClockCustomView extends View {
                 currentSecondHandEndX,
                 currentSecondHandEndY,
                 SecondHandPaint);
+
+
     }
 
     @Nullable
@@ -171,6 +158,41 @@ public class ClockCustomView extends View {
             state = bundle.getParcelable("superState");
         }
         super.onRestoreInstanceState(state);
+    }
+
+    private void drawCanvasWithClockFace() {
+        canvasWithClockFace.translate(ClockTotalRadius, ClockTotalRadius);
+        canvasWithClockFace.drawCircle(0, 0, ClockTotalRadius, FramePaint);
+        canvasWithClockFace.drawCircle(0, 0, ClockTotalRadius - ClockFrameRadius, InnerClockPaint);
+
+        float distanceToDivider = ClockTotalRadius - (ClockFrameRadius + FrameToDividerDistance);
+        float distanceToNumber = ClockTotalRadius - (ClockFrameRadius + FrameToDividerDistance + DividerToNumberDistance);
+
+        String text; //переменная для чисел
+        for (int i = 0; i < 60; i++) {
+            if (i % 5 == 0) {
+                canvasWithClockFace.drawCircle(
+                        distanceToDivider * (float) Math.cos(i * Math.PI / 30),
+                        distanceToDivider * (float) Math.sin(i * Math.PI / 30),
+                        DividerWithNumberRadius, DividerWithNumberPaint);
+                if (i == 45)
+                    text = "12";
+                else text = Integer.toString(((i / 5) + 3) % 12); //+3 т.к. положительные xy начинаются с 90 градусов
+
+                NumberPaint.getTextBounds(text, 0, text.length(), tempNumberBounds);
+                canvasWithClockFace.drawText(
+                        text,
+                        (distanceToNumber) * (float) Math.cos(i * Math.PI / 30),
+                        (distanceToNumber) * (float) Math.sin(i * Math.PI / 30)
+                                + tempNumberBounds.height() / 2f, //выравниваем числа относительно центра
+                        NumberPaint);
+            }
+            else
+                canvasWithClockFace.drawCircle(
+                        distanceToDivider * (float)Math.cos(i * Math.PI / 30),
+                        distanceToDivider * (float)Math.sin(i * Math.PI / 30),
+                        DividerDefaultRadius, DividerDefaultPaint);
+        }
     }
 
     protected void initClockSize() {
